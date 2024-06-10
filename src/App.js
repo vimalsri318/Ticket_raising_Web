@@ -1,23 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import TicketForm from './TicketForm';
+import TicketList from './TicketList';
+import './App.css'; // Import the CSS
 
 function App() {
+  const [tickets, setTickets] = useState([]);
+
+  const addTicket = (ticket) => {
+    setTickets([...tickets, ticket]);
+  };
+
+  const deleteTicket = (index) => {
+    const newTickets = tickets.filter((_, i) => i !== index);
+    setTickets(newTickets);
+  };
+
+  const updateTicket = (index, updatedTicket) => {
+    const newTickets = tickets.map((ticket, i) => (i === index ? updatedTicket : ticket));
+    setTickets(newTickets);
+  };
+
+  const confirmTicket = (index) => {
+    const newTickets = tickets.map((ticket, i) =>
+      i === index ? { ...ticket, confirmed: true } : ticket
+    );
+    setTickets(newTickets);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Ticket Management System</h1>
+      <div className="container">
+        <TicketForm addTicket={addTicket} />
+        <TicketList
+          tickets={tickets}
+          deleteTicket={deleteTicket}
+          updateTicket={updateTicket}
+          confirmTicket={confirmTicket}
+        />
+      </div>
     </div>
   );
 }
